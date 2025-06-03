@@ -10,7 +10,7 @@ import (
 func main() {
 	utils.INIT(utils.Production)
 	snapper.INIT(utils.Production)
-	systemctl.INIT(utils.Production, utils.All)
+	systemctl.INIT(utils.Debug, utils.All)
 	zypper.INIT(utils.Production, utils.All)
 	utils.RUN()
 }

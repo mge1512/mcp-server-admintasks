@@ -1,14 +1,12 @@
 package zypper
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
 	"log/syslog"
-	"os/exec"
 	"strconv"
 
 	"mcp-server-admintasks/pkg/utils"
@@ -18,8 +16,19 @@ import (
 
 var zypperDebug bool
 
-var allZypperCmds_json string
-var allZypperCmds = map[string]utils.SingleCmd{
+var zypperCmd utils.SystemCmd = utils.SystemCmd{
+	Executable:		"zypper",
+	Description:		"Command-line interface to ZYpp system management library (libzypp)",
+	NeedsRootHandling:	true,
+        Parameters: []utils.CmdParameter{
+                {Description: "--xmlout", Type: "string", IsMandatory: true},
+                {Description: "--terse", Type: "string", IsMandatory: true},
+                {Description: "--non-interactive", Type: "string", IsMandatory: true},
+        },
+}
+
+var allZypperSubCmds_json string
+var allZypperSubCmds = map[string]utils.SingleSubCmd{
 	"search": {
 		CmdGroup:      "Querying Commands",
 		Summary:       "DEFAULT action of zypper. Search for packages matching a PATTERN.",
@@ -439,61 +448,7 @@ var allZypperCmds = map[string]utils.SingleCmd{
 	},
 }
 
-func callZypper(isRootRequired bool, zypper_cmd string, zypper_params ...interface{}) string {
-	
-	if zypper_cmd == "help" {
-
-		return(string(allZypperCmds_json))
-
-	} else {
-
-		// Construct the cmdline for zypper: Always use XML, prep for machine operations
-		var strArgs = []string{"--xmlout", "--terse", "--non-interactive", zypper_cmd}
-		for _, arg := range zypper_params {
-			strArgs = append(strArgs, fmt.Sprint(arg)) // Convert each argument to a string
-		}
-		var cmd *exec.Cmd 
-		if isRootRequired {
-			sudoArgsA := append([]string{"/usr/bin/zypper"}, strArgs...) 
-			sudoArgsB := append([]string{"-b"}, sudoArgsA...) 
-			cmd = exec.Command("sudo", sudoArgsB...)
-		} else {
-			cmd = exec.Command("/usr/bin/zypper", strArgs...)
-		}
-		// Using syslog is useful for debugging
-		sysLog, syslogerr := syslog.New(syslog.LOG_INFO, "mcp-server-zypper")
-		if zypperDebug {
-			if syslogerr != nil {
-				log.Fatalf("Failed to connect to syslog: %v", syslogerr)
-			}
-		}
-		defer sysLog.Close()
-		// Buffer to capture the output
-		var out bytes.Buffer
-		var resultstring string = out.String()
-		cmd.Stdout = &out
-		err := cmd.Run()
-		if zypperDebug {
-			sysLog.Info(cmd.String())
-		}
-		if err != nil {
-			return ("Error running zypper command: %v")
-		} else {
-			if len(out.String()) == 0 {
-				resultstring = "<message>success</message>"
-			} else {
-				resultstring = out.String()
-			}
-		}
-		if zypperDebug {
-			sysLog.Info(resultstring)
-		}
-		// return XML
-		return resultstring
-	}
-}
-
-func addSingleToolToMCPServer(cmdName string, newCmd utils.SingleCmd) {
+func addSingleToolToMCPServer(cmdName string, newCmd utils.SingleSubCmd) {
 
 	if newCmd.IsEnabled {
 		
@@ -521,7 +476,7 @@ func addSingleToolToMCPServer(cmdName string, newCmd utils.SingleCmd) {
 				utils.AdminTasksMCPServer.AddTool(mcpToolZypper, func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 					zypperp00, ok := req.GetArguments()["zypperp00"].(string)
 					if !ok { return nil, errors.New("Error in addSingleToolToMCPServer -> utils.AdminTasksMCPServer.AddTool - 1 parameter") }
-					return mcp.NewToolResultText(fmt.Sprintf("%s", callZypper(newCmd.IsRootRequired, cmdName, zypperp00))), nil
+					return mcp.NewToolResultText(fmt.Sprintf("%s", utils.ExecuteSystemCall(zypperCmd, allZypperSubCmds_json,newCmd.IsRootRequired, cmdName, zypperp00))), nil
 				})
 			case 2: 
 				mcpToolZypper := mcp.NewTool(newCmdName, mcp.WithDescription(newCmd.Summary),
@@ -532,7 +487,7 @@ func addSingleToolToMCPServer(cmdName string, newCmd utils.SingleCmd) {
 					zypperp00, ok := req.GetArguments()["zypperp00"].(string)
 					zypperp01, ok := req.GetArguments()["zypperp01"].(string)
 					if !ok { return nil, errors.New("Error in addSingleToolToMCPServer -> utils.AdminTasksMCPServer.AddTool - 2 parameters") }
-					return mcp.NewToolResultText(fmt.Sprintf("%s", callZypper(newCmd.IsRootRequired, cmdName, zypperp00, zypperp01))), nil
+					return mcp.NewToolResultText(fmt.Sprintf("%s", utils.ExecuteSystemCall(zypperCmd, allZypperSubCmds_json,newCmd.IsRootRequired, cmdName, zypperp00, zypperp01))), nil
 				})
 			case 3: 
 				mcpToolZypper := mcp.NewTool(newCmdName, mcp.WithDescription(newCmd.Summary),
@@ -545,12 +500,12 @@ func addSingleToolToMCPServer(cmdName string, newCmd utils.SingleCmd) {
 					zypperp01, ok := req.GetArguments()["zypperp01"].(string)
 					zypperp02, ok := req.GetArguments()["zypperp02"].(string)
 					if !ok { return nil, errors.New("Error in addSingleToolToMCPServer -> utils.AdminTasksMCPServer.AddTool - 3 parameters") }
-					return mcp.NewToolResultText(fmt.Sprintf("%s", callZypper(newCmd.IsRootRequired, cmdName, zypperp00, zypperp01, zypperp02))), nil
+					return mcp.NewToolResultText(fmt.Sprintf("%s", utils.ExecuteSystemCall(zypperCmd, allZypperSubCmds_json,newCmd.IsRootRequired, cmdName, zypperp00, zypperp01, zypperp02))), nil
 				})
 			default: 
 				mcpToolZypper := mcp.NewTool(newCmdName, mcp.WithDescription(newCmd.Summary))
 				utils.AdminTasksMCPServer.AddTool(mcpToolZypper, func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-					return mcp.NewToolResultText(fmt.Sprintf("%s", callZypper(newCmd.IsRootRequired, cmdName))), nil
+					return mcp.NewToolResultText(fmt.Sprintf("%s", utils.ExecuteSystemCall(zypperCmd, allZypperSubCmds_json,newCmd.IsRootRequired, cmdName))), nil
 				})
 		}
 	}
@@ -562,7 +517,7 @@ func addToolsToMCPServer() {
 		mcp.WithDescription("Send a single cmd to zypper and get output back in XML (or JSON)"),
 		mcp.WithString("zyppercmd",
 			mcp.Required(),
-			mcp.Description(string(allZypperCmds_json)),
+			mcp.Description(string(allZypperSubCmds_json)),
 		),
 		mcp.WithString("zypperp01",
 			mcp.Required(),
@@ -583,7 +538,7 @@ func addToolsToMCPServer() {
 			return nil, errors.New("Error in addToolsToMCPServer -> utils.AdminTasksMCPServer.AddTool")
 		}
 
-		return mcp.NewToolResultText(fmt.Sprintf("%s", callZypper(false, zyppercmd, zypperp01, zypperp02))), nil
+		return mcp.NewToolResultText(fmt.Sprintf("%s", utils.ExecuteSystemCall(zypperCmd, allZypperSubCmds_json,false, zyppercmd, zypperp01, zypperp02))), nil
 	})
 
 }
@@ -593,20 +548,20 @@ func runTests() {
 }
 
 func INIT(debugMode utils.RunningMode, initMode utils.ToolsInitMode) {
-	allZypperCmds_tmp, err := json.MarshalIndent(allZypperCmds, "", "  ")
+	allZypperSubCmds_tmp, err := json.MarshalIndent(allZypperSubCmds, "", "  ")
 	if err != nil {
 		fmt.Println("Error converting to JSON:", err)
 		return
 	}
-	allZypperCmds_json = string(allZypperCmds_tmp)
+	allZypperSubCmds_json = string(allZypperSubCmds_tmp)
 	switch debugMode {
 	case utils.Production:
 		zypperDebug = false
 		if initMode == utils.Single {
 			addToolsToMCPServer()
 		} else {
-			for key := range allZypperCmds {
-				addSingleToolToMCPServer(key, allZypperCmds[key] )
+			for key := range allZypperSubCmds {
+				addSingleToolToMCPServer(key, allZypperSubCmds[key] )
 			}
 		}
 	case utils.Debug:
@@ -614,8 +569,8 @@ func INIT(debugMode utils.RunningMode, initMode utils.ToolsInitMode) {
 		if initMode == utils.Single {
 			addToolsToMCPServer()
 		} else {
-			for key := range allZypperCmds {
-				addSingleToolToMCPServer(key, allZypperCmds[key] )
+			for key := range allZypperSubCmds {
+				addSingleToolToMCPServer(key, allZypperSubCmds[key] )
 			}
 		}
 	case utils.Test:

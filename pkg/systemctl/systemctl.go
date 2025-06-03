@@ -1,14 +1,12 @@
 package systemctl
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
 	"log/syslog"
-	"os/exec"
 	"strconv"
 
 	"mcp-server-admintasks/pkg/utils"
@@ -18,8 +16,19 @@ import (
 
 var systemctlDebug bool
 
-var allSystemCtlCmds_json string
-var allSystemCtlCmds = map[string]utils.SingleCmd{
+var systemCtlCmd utils.SystemCmd = utils.SystemCmd{
+	Executable:		"systemctl",
+	Description:		"Query or send control commands to the system manager",
+	NeedsRootHandling:	false,
+        Parameters: []utils.CmdParameter{
+                {Description: "--output=json-pretty", Type: "string", IsMandatory: true},
+                {Description: "--full", Type: "string", IsMandatory: true},
+                {Description: "--no-pager", Type: "string", IsMandatory: true},
+        },
+}
+
+var allSystemCtlSubCmds_json string
+var allSystemCtlSubCmds = map[string]utils.SingleSubCmd{
 	"list-units": {
 		CmdGroup:      "Unit Commands",
 		Summary:       "List units currently in memory. DEFAULT action of systemctl, recommended to use with OPTION='--all'.",
@@ -592,43 +601,7 @@ var allSystemCtlCmds = map[string]utils.SingleCmd{
 	},
 }
 
-func callSystemCtl(isRootRequired bool, systemctl_cmd string, systemctl_params ...interface{}) string {
-
-	if systemctl_cmd == "help" {
-
-		return(string(allSystemCtlCmds_json))
-
-	} else {
-		// Construct the cmdline for systemctl: Always JSON, never shorten names, no pager
-		var strArgs = []string{"-o", "json-pretty", "--full", "--no-pager", systemctl_cmd}
-		for _, arg := range systemctl_params {
-			strArgs = append(strArgs, fmt.Sprint(arg)) // Convert each argument to a string
-		}
-		var cmd *exec.Cmd 
-		if isRootRequired {
-		} else {
-			cmd = exec.Command("systemctl", strArgs...)
-		}
-		// Buffer to capture the output
-		var out bytes.Buffer
-		var resultstring string
-		cmd.Stdout = &out
-		err := cmd.Run()
-		if err != nil {
-			return ("Error running systemctl command: %v")
-		} else {
-			if len(out.String()) == 0 {
-				resultstring = "{\"message\": \"success\"}"
-			} else {
-				resultstring = out.String()
-			}
-		}
-		// return the (hopefully) JSON string ...
-		return (resultstring)
-	}
-}
-
-func addSingleToolToMCPServer(cmdName string, newCmd utils.SingleCmd) {
+func addSingleToolToMCPServer(cmdName string, newCmd utils.SingleSubCmd) {
 
 	if newCmd.IsEnabled {
 		
@@ -656,7 +629,7 @@ func addSingleToolToMCPServer(cmdName string, newCmd utils.SingleCmd) {
 				utils.AdminTasksMCPServer.AddTool(mcpToolZypper, func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 					systemctlp00, ok := req.GetArguments()["systemctlp00"].(string)
 					if !ok { return nil, errors.New("Error in addSingleToolToMCPServer -> utils.AdminTasksMCPServer.AddTool - 1 parameter") }
-					return mcp.NewToolResultText(fmt.Sprintf("%s", callSystemCtl(newCmd.IsRootRequired, cmdName, systemctlp00))), nil
+					return mcp.NewToolResultText(fmt.Sprintf("%s", utils.ExecuteSystemCall(systemCtlCmd, allSystemCtlSubCmds_json, newCmd.IsRootRequired, cmdName, systemctlp00))), nil
 				})
 			case 2: 
 				mcpToolZypper := mcp.NewTool(newCmdName, mcp.WithDescription(newCmd.Summary),
@@ -667,7 +640,7 @@ func addSingleToolToMCPServer(cmdName string, newCmd utils.SingleCmd) {
 					systemctlp00, ok := req.GetArguments()["systemctlp00"].(string)
 					systemctlp01, ok := req.GetArguments()["systemctlp01"].(string)
 					if !ok { return nil, errors.New("Error in addSingleToolToMCPServer -> utils.AdminTasksMCPServer.AddTool - 2 parameters") }
-					return mcp.NewToolResultText(fmt.Sprintf("%s", callSystemCtl(newCmd.IsRootRequired, cmdName, systemctlp00, systemctlp01))), nil
+					return mcp.NewToolResultText(fmt.Sprintf("%s", utils.ExecuteSystemCall(systemCtlCmd, allSystemCtlSubCmds_json, newCmd.IsRootRequired, cmdName, systemctlp00, systemctlp01))), nil
 				})
 			case 3: 
 				mcpToolZypper := mcp.NewTool(newCmdName, mcp.WithDescription(newCmd.Summary),
@@ -680,12 +653,12 @@ func addSingleToolToMCPServer(cmdName string, newCmd utils.SingleCmd) {
 					systemctlp01, ok := req.GetArguments()["systemctlp01"].(string)
 					systemctlp02, ok := req.GetArguments()["systemctlp02"].(string)
 					if !ok { return nil, errors.New("Error in addSingleToolToMCPServer -> utils.AdminTasksMCPServer.AddTool - 3 parameters") }
-					return mcp.NewToolResultText(fmt.Sprintf("%s", callSystemCtl(newCmd.IsRootRequired, cmdName, systemctlp00, systemctlp01, systemctlp02))), nil
+					return mcp.NewToolResultText(fmt.Sprintf("%s", utils.ExecuteSystemCall(systemCtlCmd, allSystemCtlSubCmds_json, newCmd.IsRootRequired, cmdName, systemctlp00, systemctlp01, systemctlp02))), nil
 				})
 			default: 
 				mcpToolZypper := mcp.NewTool(newCmdName, mcp.WithDescription(newCmd.Summary))
 				utils.AdminTasksMCPServer.AddTool(mcpToolZypper, func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-					return mcp.NewToolResultText(fmt.Sprintf("%s", callSystemCtl(newCmd.IsRootRequired, cmdName))), nil
+					return mcp.NewToolResultText(fmt.Sprintf("%s", utils.ExecuteSystemCall(systemCtlCmd, allSystemCtlSubCmds_json, newCmd.IsRootRequired, cmdName))), nil
 				})
 		}
 
@@ -699,7 +672,7 @@ func addAllInOneToolsToMCPServer() {
 		mcp.WithDescription("Send a single cmd to systemctl and get output back in JSON. First try COMMAND 'help' to get an overview about all commands or COMMAND list-commands with OPTION --all for what is there. List units currently in memory. Use OPTION='--all' to see also those units which are installed, but not enabled. This is the default of systemctl and should be called first to get an overview."),
 		mcp.WithString("systemctlcmd",
 			mcp.Required(),
-			mcp.Description(string(allSystemCtlCmds_json)),
+			mcp.Description(string(allSystemCtlSubCmds_json)),
 		),
 		mcp.WithString("systemctlparams",
 			mcp.Required(),
@@ -714,7 +687,7 @@ func addAllInOneToolsToMCPServer() {
 		if !ok {
 			return nil, errors.New("Error initializing tool_systemctl")
 		}
-		return mcp.NewToolResultText(fmt.Sprintf("%s", callSystemCtl(false, systemctlcmd, systemctlparams))), nil
+		return mcp.NewToolResultText(fmt.Sprintf("%s", utils.ExecuteSystemCall(systemCtlCmd, allSystemCtlSubCmds_json, false, systemctlcmd, systemctlparams))), nil
 	})
 
 }
@@ -724,20 +697,20 @@ func runTests() {
 }
 
 func INIT(debugMode utils.RunningMode, initMode utils.ToolsInitMode) {
-	allSystemCtlCmds_tmp, err := json.MarshalIndent(allSystemCtlCmds, "", "  ")
+	allSystemCtlSubCmds_tmp, err := json.MarshalIndent(allSystemCtlSubCmds, "", "  ")
 	if err != nil {
 		fmt.Println("Error converting to JSON:", err)
 		return
 	}
-	allSystemCtlCmds_json = string(allSystemCtlCmds_tmp)
+	allSystemCtlSubCmds_json = string(allSystemCtlSubCmds_tmp)
 	switch debugMode {
 	case utils.Production:
 		systemctlDebug = false
 		if initMode == utils.Single {
 			addAllInOneToolsToMCPServer()
 		} else {
-			for key := range allSystemCtlCmds {
-				addSingleToolToMCPServer(key, allSystemCtlCmds[key] )
+			for key := range allSystemCtlSubCmds {
+				addSingleToolToMCPServer(key, allSystemCtlSubCmds[key] )
 			}
 		}
 	case utils.Debug:
@@ -745,8 +718,8 @@ func INIT(debugMode utils.RunningMode, initMode utils.ToolsInitMode) {
 		if initMode == utils.Single {
 			addAllInOneToolsToMCPServer()
 		} else {
-			for key := range allSystemCtlCmds {
-				addSingleToolToMCPServer(key, allSystemCtlCmds[key] )
+			for key := range allSystemCtlSubCmds {
+				addSingleToolToMCPServer(key, allSystemCtlSubCmds[key] )
 			}
 		}
 	case utils.Test:
