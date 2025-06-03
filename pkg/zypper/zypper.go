@@ -17,441 +17,436 @@ import (
 var zypperDebug bool
 
 var zypperCmd utils.SystemCmd = utils.SystemCmd{
-	Executable:		"zypper",
-	Description:		"Command-line interface to ZYpp system management library (libzypp)",
-	NeedsRootHandling:	true,
-        Parameters: []utils.CmdParameter{
-                {Description: "--xmlout", Type: "string", IsMandatory: true},
-                {Description: "--terse", Type: "string", IsMandatory: true},
-                {Description: "--non-interactive", Type: "string", IsMandatory: true},
-        },
+	Executable:        "zypper",
+	Description:       "Command-line interface to ZYpp system management library (libzypp)",
+	NeedsRootHandling: true,
+	Parameters: 	   []string{"--xmlout", "--terse", "--non-interactive"},
 }
 
 var allZypperSubCmds_json string
 var allZypperSubCmds = map[string]utils.SingleSubCmd{
 	"search": {
-		CmdGroup:      "Querying Commands",
-		Summary:       "DEFAULT action of zypper. Search for packages matching a PATTERN.",
-		Description:   "PATTERN can be a regular expression. Recommended when searching for unknown packages or patterns or when the name of a package might be vague/unclear. For a more extensive search try to add the SEARCHOPTION '--search-description'.",
-		IsEnabled:	true,
+		CmdGroup:       "Querying Commands",
+		Summary:        "DEFAULT action of zypper. Search for packages matching a PATTERN.",
+		Description:    "PATTERN can be a regular expression. Recommended when searching for unknown packages or patterns or when the name of a package might be vague/unclear. For a more extensive search try to add the SEARCHOPTION '--search-description'.",
+		IsEnabled:      true,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{{"PATTERN or PACKAGE name", "string", false}, {"SEARCHOPTION", "string", false}},
-		// Parameters: []utils.CmdParameter{{"PATTERN or PACKAGE name", "string", false}, {"SEARCHOPTION", "string", false}, {"VALUE", "string or number", false}},
+		Parameters:     []string{"PATTERN or PACKAGE name", "SEARCHOPTION"},
 	},
 	"help": {
-		CmdGroup:      "General Commands",
-		Summary:       "Print zypper help",
-		Description:   "",
-		IsEnabled:	true,
+		CmdGroup:       "General Commands",
+		Summary:        "Print zypper help",
+		Description:    "",
+		IsEnabled:      true,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"repos": {
-		CmdGroup:      "RepositoryManagement Commands",
-		Summary:       "List all defined repositories.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "RepositoryManagement Commands",
+		Summary:        "List all defined repositories.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"addrepo": {
-		CmdGroup:      "RepositoryManagement Commands",
-		Summary:       "Add a new repository.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "RepositoryManagement Commands",
+		Summary:        "Add a new repository.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"removerepo": {
-		CmdGroup:      "RepositoryManagement Commands",
-		Summary:       "Remove specified repository.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "RepositoryManagement Commands",
+		Summary:        "Remove specified repository.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"renamerepo": {
-		CmdGroup:      "RepositoryManagement Commands",
-		Summary:       "Rename specified repository.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "RepositoryManagement Commands",
+		Summary:        "Rename specified repository.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"modifyrepo": {
-		CmdGroup:      "RepositoryManagement Commands",
-		Summary:       "Modify specified repository.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "RepositoryManagement Commands",
+		Summary:        "Modify specified repository.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"refresh": {
-		CmdGroup:      "RepositoryManagement Commands",
-		Summary:       "Refresh all repositories.",
-		Description:   "",
-		IsEnabled:	true,
+		CmdGroup:       "RepositoryManagement Commands",
+		Summary:        "Refresh all repositories.",
+		Description:    "",
+		IsEnabled:      true,
 		IsRootRequired: true,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"clean": {
-		CmdGroup:      "RepositoryManagement Commands",
-		Summary:       "Clean local caches.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "RepositoryManagement Commands",
+		Summary:        "Clean local caches.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"services": {
-		CmdGroup:      "ServiceManagement Commands",
-		Summary:       "List all defined services.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "ServiceManagement Commands",
+		Summary:        "List all defined services.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"addservice": {
-		CmdGroup:      "ServiceManagement Commands",
-		Summary:       "Add a new service.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "ServiceManagement Commands",
+		Summary:        "Add a new service.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"modifyservice": {
-		CmdGroup:      "ServiceManagement Commands",
-		Summary:       "Modify specified service.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "ServiceManagement Commands",
+		Summary:        "Modify specified service.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"removeservice": {
-		CmdGroup:      "ServiceManagement Commands",
-		Summary:       "Remove specified service.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "ServiceManagement Commands",
+		Summary:        "Remove specified service.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"refresh-services": {
-		CmdGroup:      "ServiceManagement Commands",
-		Summary:       "Refresh all services.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "ServiceManagement Commands",
+		Summary:        "Refresh all services.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"install": {
-		CmdGroup:      "SoftwareManagement Commands",
-		Summary:       "Install packages.",
-		Description:   "If installation fails adding the INSTALLOPTION '--no-confirm' might help",
-		IsEnabled:	true,
+		CmdGroup:       "SoftwareManagement Commands",
+		Summary:        "Install packages.",
+		Description:    "If installation fails adding the INSTALLOPTION '--no-confirm' might help",
+		IsEnabled:      true,
 		IsRootRequired: true,
-		Parameters:    []utils.CmdParameter{{"PATTERN or PACKAGE name", "string", false}, {"INSTALLOPTION", "string", false}},
+		Parameters:     []string{"PATTERN or PACKAGE name", "INSTALLOPTION"},
 	},
 	"remove": {
-		CmdGroup:      "SoftwareManagement Commands",
-		Summary:       "Remove packages.",
-		Description:   "If installation fails adding the INSTALLOPTION '--no-confirm' might help",
-		IsEnabled:	true,
+		CmdGroup:       "SoftwareManagement Commands",
+		Summary:        "Remove packages.",
+		Description:    "If installation fails adding the INSTALLOPTION '--no-confirm' might help",
+		IsEnabled:      true,
 		IsRootRequired: true,
-		Parameters:    []utils.CmdParameter{{"PATTERN or PACKAGE name", "string", false}, {"REMOVEOPTION", "string", false}},
+		Parameters:     []string{"PATTERN or PACKAGE name", "REMOVEOPTION"},
 	},
 	"removeptf": {
-		CmdGroup:      "SoftwareManagement Commands",
-		Summary:       "Remove (not only) PTFs.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "SoftwareManagement Commands",
+		Summary:        "Remove (not only) PTFs.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"verify": {
-		CmdGroup:      "SoftwareManagement Commands",
-		Summary:       "Verify integrity of package dependencies.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "SoftwareManagement Commands",
+		Summary:        "Verify integrity of package dependencies.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"source-install": {
-		CmdGroup:      "SoftwareManagement Commands",
-		Summary:       "Install source packages and their build dependencies.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "SoftwareManagement Commands",
+		Summary:        "Install source packages and their build dependencies.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"install-new-recommends": {
-		CmdGroup:      "SoftwareManagement Commands",
-		Summary:       "Install newly added packages recommended by installed packages.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "SoftwareManagement Commands",
+		Summary:        "Install newly added packages recommended by installed packages.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"update": {
-		CmdGroup:      "UpdateManagement Commands",
-		Summary:       "Update installed packages with newer versions.",
-		Description:   "",
-		IsEnabled:	true,
+		CmdGroup:       "UpdateManagement Commands",
+		Summary:        "Update installed packages with newer versions.",
+		Description:    "",
+		IsEnabled:      true,
 		IsRootRequired: true,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"list-updates": {
-		CmdGroup:      "UpdateManagement Commands",
-		Summary:       "List available updates.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "UpdateManagement Commands",
+		Summary:        "List available updates.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"patch": {
-		CmdGroup:      "UpdateManagement Commands",
-		Summary:       "Install needed patches.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "UpdateManagement Commands",
+		Summary:        "Install needed patches.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"list-patches": {
-		CmdGroup:      "UpdateManagement Commands",
-		Summary:       "List available patches.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "UpdateManagement Commands",
+		Summary:        "List available patches.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"dist-upgrade": {
-		CmdGroup:      "UpdateManagement Commands",
-		Summary:       "Perform a distribution upgrade.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "UpdateManagement Commands",
+		Summary:        "Perform a distribution upgrade.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"patch-check": {
-		CmdGroup:      "UpdateManagement Commands",
-		Summary:       "Check for patches.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "UpdateManagement Commands",
+		Summary:        "Check for patches.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"info": {
-		CmdGroup:      "Querying Commands",
-		Summary:       "Show full information for specified packages.",
-		Description:   "Ask for full/detailed information about a single package with a known name (version, size, status, description, installation status).--  Do not use, if the name is not fully clear (use zypper search for that). ",
-		IsEnabled:	true,
+		CmdGroup:       "Querying Commands",
+		Summary:        "Show full information for specified packages.",
+		Description:    "Ask for full/detailed information about a single package with a known name (version, size, status, description, installation status).--  Do not use, if the name is not fully clear (use zypper search for that). ",
+		IsEnabled:      true,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{{"PACKAGE name", "string", false}},
+		Parameters:     []string{"PACKAGE name"},
 	},
 	"patch-info": {
-		CmdGroup:      "Querying Commands",
-		Summary:       "Show full information for specified patches.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "Querying Commands",
+		Summary:        "Show full information for specified patches.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"pattern-info": {
-		CmdGroup:      "Querying Commands",
-		Summary:       "Show full information for specified patterns.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "Querying Commands",
+		Summary:        "Show full information for specified patterns.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"product-info": {
-		CmdGroup:      "Querying Commands",
-		Summary:       "Show full information for specified products.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "Querying Commands",
+		Summary:        "Show full information for specified products.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"patches": {
-		CmdGroup:      "Querying Commands",
-		Summary:       "List all available patches.",
-		Description:   "",
-		IsEnabled:	true,
+		CmdGroup:       "Querying Commands",
+		Summary:        "List all available patches.",
+		Description:    "",
+		IsEnabled:      true,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"packages": {
-		CmdGroup:      "Querying Commands",
-		Summary:       "List all available packages.",
-		Description:   "If the package name is known, better use zypper search ",
-		IsEnabled:	true,
+		CmdGroup:       "Querying Commands",
+		Summary:        "List all available packages.",
+		Description:    "If the package name is known, better use zypper search ",
+		IsEnabled:      true,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"patterns": {
-		CmdGroup:      "Querying Commands",
-		Summary:       "List all available patterns.",
-		Description:   "",
-		IsEnabled:	true,
+		CmdGroup:       "Querying Commands",
+		Summary:        "List all available patterns.",
+		Description:    "",
+		IsEnabled:      true,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"products": {
-		CmdGroup:      "Querying Commands",
-		Summary:       "List all available products.",
-		Description:   "",
-		IsEnabled:	true,
+		CmdGroup:       "Querying Commands",
+		Summary:        "List all available products.",
+		Description:    "",
+		IsEnabled:      true,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"what-provides": {
-		CmdGroup:      "Querying Commands",
-		Summary:       "List packages providing specified capability.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "Querying Commands",
+		Summary:        "List packages providing specified capability.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"addlock": {
-		CmdGroup:      "PackageLocks Commands",
-		Summary:       "Add a package lock.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "PackageLocks Commands",
+		Summary:        "Add a package lock.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"removelock": {
-		CmdGroup:      "PackageLocks Commands",
-		Summary:       "Remove a package lock.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "PackageLocks Commands",
+		Summary:        "Remove a package lock.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"locks": {
-		CmdGroup:      "PackageLocks Commands",
-		Summary:       "List current package locks.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "PackageLocks Commands",
+		Summary:        "List current package locks.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"cleanlocks": {
-		CmdGroup:      "PackageLocks Commands",
-		Summary:       "Remove useless locks.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "PackageLocks Commands",
+		Summary:        "Remove useless locks.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"locales": {
-		CmdGroup:      "LocaleManagement Commands",
-		Summary:       "List requested locales (languages codes).",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "LocaleManagement Commands",
+		Summary:        "List requested locales (languages codes).",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"addlocale": {
-		CmdGroup:      "LocaleManagement Commands",
-		Summary:       "Add locale(s) to requested locales.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "LocaleManagement Commands",
+		Summary:        "Add locale(s) to requested locales.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"removelocale": {
-		CmdGroup:      "LocaleManagement Commands",
-		Summary:       "Remove locale(s) from requested locales.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "LocaleManagement Commands",
+		Summary:        "Remove locale(s) from requested locales.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"versioncmp": {
-		CmdGroup:      "Other Commands",
-		Summary:       "Compare two version strings.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "Other Commands",
+		Summary:        "Compare two version strings.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"targetos": {
-		CmdGroup:      "Other Commands",
-		Summary:       "Print the target operating system ID string.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "Other Commands",
+		Summary:        "Print the target operating system ID string.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"licenses": {
-		CmdGroup:      "Other Commands",
-		Summary:       "Print report about licenses and EULAs of installed packages.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "Other Commands",
+		Summary:        "Print report about licenses and EULAs of installed packages.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"download": {
-		CmdGroup:      "Other Commands",
-		Summary:       "Download rpms specified on the commandline to a local directory.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "Other Commands",
+		Summary:        "Download rpms specified on the commandline to a local directory.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"source-download": {
-		CmdGroup:      "Other Commands",
-		Summary:       "Download source rpms for all installed packages to a local directory.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "Other Commands",
+		Summary:        "Download source rpms for all installed packages to a local directory.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"needs-rebooting": {
-		CmdGroup:      "Other Commands",
-		Summary:       "Check if the reboot-needed flag was set.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "Other Commands",
+		Summary:        "Check if the reboot-needed flag was set.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"ps": {
-		CmdGroup:      "Other Commands",
-		Summary:       "List running processes which might still use files and libraries deleted",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "Other Commands",
+		Summary:        "List running processes which might still use files and libraries deleted",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"purge-kernels": {
-		CmdGroup:      "Other Commands",
-		Summary:       "Remove old kernels.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "Other Commands",
+		Summary:        "Remove old kernels.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"system-architecture": {
-		CmdGroup:      "Other Commands",
-		Summary:       "Print the detected system architecture.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "Other Commands",
+		Summary:        "Print the detected system architecture.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 	"subcommand": {
-		CmdGroup:      "Subcommands Commands",
-		Summary:       "Lists available subcommands.",
-		Description:   "",
-		IsEnabled:	false,
+		CmdGroup:       "Subcommands Commands",
+		Summary:        "Lists available subcommands.",
+		Description:    "",
+		IsEnabled:      false,
 		IsRootRequired: false,
-		Parameters:    []utils.CmdParameter{},
+		Parameters:     []string{},
 	},
 }
 
 func addSingleToolToMCPServer(cmdName string, newCmd utils.SingleSubCmd) {
 
 	if newCmd.IsEnabled {
-		
+
 		newCmdName := "zypper_" + cmdName
 
 		var numOfParameters = 0
@@ -470,43 +465,49 @@ func addSingleToolToMCPServer(cmdName string, newCmd utils.SingleSubCmd) {
 		}
 
 		switch numOfParameters {
-			case 1: 
-				mcpToolZypper := mcp.NewTool(newCmdName, mcp.WithDescription(newCmd.Summary),
-					mcp.WithString("zypperp00", mcp.Required(), mcp.Description(newCmd.Parameters[0].Description),),)
-				utils.AdminTasksMCPServer.AddTool(mcpToolZypper, func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-					zypperp00, ok := req.GetArguments()["zypperp00"].(string)
-					if !ok { return nil, errors.New("Error in addSingleToolToMCPServer -> utils.AdminTasksMCPServer.AddTool - 1 parameter") }
-					return mcp.NewToolResultText(fmt.Sprintf("%s", utils.ExecuteSystemCall(zypperCmd, allZypperSubCmds_json,newCmd.IsRootRequired, cmdName, zypperp00))), nil
-				})
-			case 2: 
-				mcpToolZypper := mcp.NewTool(newCmdName, mcp.WithDescription(newCmd.Summary),
-					mcp.WithString("zypperp00", mcp.Required(), mcp.Description(newCmd.Parameters[0].Description),),
-					mcp.WithString("zypperp01", mcp.Required(), mcp.Description(newCmd.Parameters[1].Description),),
-				)
-				utils.AdminTasksMCPServer.AddTool(mcpToolZypper, func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-					zypperp00, ok := req.GetArguments()["zypperp00"].(string)
-					zypperp01, ok := req.GetArguments()["zypperp01"].(string)
-					if !ok { return nil, errors.New("Error in addSingleToolToMCPServer -> utils.AdminTasksMCPServer.AddTool - 2 parameters") }
-					return mcp.NewToolResultText(fmt.Sprintf("%s", utils.ExecuteSystemCall(zypperCmd, allZypperSubCmds_json,newCmd.IsRootRequired, cmdName, zypperp00, zypperp01))), nil
-				})
-			case 3: 
-				mcpToolZypper := mcp.NewTool(newCmdName, mcp.WithDescription(newCmd.Summary),
-					mcp.WithString("zypperp00", mcp.Required(), mcp.Description(newCmd.Parameters[0].Description),),
-					mcp.WithString("zypperp01", mcp.Required(), mcp.Description(newCmd.Parameters[1].Description),),
-					mcp.WithString("zypperp02", mcp.Required(), mcp.Description(newCmd.Parameters[2].Description),),
-				)
-				utils.AdminTasksMCPServer.AddTool(mcpToolZypper, func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-					zypperp00, ok := req.GetArguments()["zypperp00"].(string)
-					zypperp01, ok := req.GetArguments()["zypperp01"].(string)
-					zypperp02, ok := req.GetArguments()["zypperp02"].(string)
-					if !ok { return nil, errors.New("Error in addSingleToolToMCPServer -> utils.AdminTasksMCPServer.AddTool - 3 parameters") }
-					return mcp.NewToolResultText(fmt.Sprintf("%s", utils.ExecuteSystemCall(zypperCmd, allZypperSubCmds_json,newCmd.IsRootRequired, cmdName, zypperp00, zypperp01, zypperp02))), nil
-				})
-			default: 
-				mcpToolZypper := mcp.NewTool(newCmdName, mcp.WithDescription(newCmd.Summary))
-				utils.AdminTasksMCPServer.AddTool(mcpToolZypper, func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-					return mcp.NewToolResultText(fmt.Sprintf("%s", utils.ExecuteSystemCall(zypperCmd, allZypperSubCmds_json,newCmd.IsRootRequired, cmdName))), nil
-				})
+		case 1:
+			mcpToolZypper := mcp.NewTool(newCmdName, mcp.WithDescription(newCmd.Summary),
+				mcp.WithString("zypperp00", mcp.Required(), mcp.Description(newCmd.Parameters[0])))
+			utils.AdminTasksMCPServer.AddTool(mcpToolZypper, func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+				zypperp00, ok := req.GetArguments()["zypperp00"].(string)
+				if !ok {
+					return nil, errors.New("Error in addSingleToolToMCPServer -> utils.AdminTasksMCPServer.AddTool - 1 parameter")
+				}
+				return mcp.NewToolResultText(fmt.Sprintf("%s", utils.ExecuteSystemCall(zypperCmd, allZypperSubCmds_json, newCmd.IsRootRequired, cmdName, zypperp00))), nil
+			})
+		case 2:
+			mcpToolZypper := mcp.NewTool(newCmdName, mcp.WithDescription(newCmd.Summary),
+				mcp.WithString("zypperp00", mcp.Required(), mcp.Description(newCmd.Parameters[0])),
+				mcp.WithString("zypperp01", mcp.Required(), mcp.Description(newCmd.Parameters[1])),
+			)
+			utils.AdminTasksMCPServer.AddTool(mcpToolZypper, func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+				zypperp00, ok := req.GetArguments()["zypperp00"].(string)
+				zypperp01, ok := req.GetArguments()["zypperp01"].(string)
+				if !ok {
+					return nil, errors.New("Error in addSingleToolToMCPServer -> utils.AdminTasksMCPServer.AddTool - 2 parameters")
+				}
+				return mcp.NewToolResultText(fmt.Sprintf("%s", utils.ExecuteSystemCall(zypperCmd, allZypperSubCmds_json, newCmd.IsRootRequired, cmdName, zypperp00, zypperp01))), nil
+			})
+		case 3:
+			mcpToolZypper := mcp.NewTool(newCmdName, mcp.WithDescription(newCmd.Summary),
+				mcp.WithString("zypperp00", mcp.Required(), mcp.Description(newCmd.Parameters[0])),
+				mcp.WithString("zypperp01", mcp.Required(), mcp.Description(newCmd.Parameters[1])),
+				mcp.WithString("zypperp02", mcp.Required(), mcp.Description(newCmd.Parameters[2])),
+			)
+			utils.AdminTasksMCPServer.AddTool(mcpToolZypper, func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+				zypperp00, ok := req.GetArguments()["zypperp00"].(string)
+				zypperp01, ok := req.GetArguments()["zypperp01"].(string)
+				zypperp02, ok := req.GetArguments()["zypperp02"].(string)
+				if !ok {
+					return nil, errors.New("Error in addSingleToolToMCPServer -> utils.AdminTasksMCPServer.AddTool - 3 parameters")
+				}
+				return mcp.NewToolResultText(fmt.Sprintf("%s", utils.ExecuteSystemCall(zypperCmd, allZypperSubCmds_json, newCmd.IsRootRequired, cmdName, zypperp00, zypperp01, zypperp02))), nil
+			})
+		default:
+			mcpToolZypper := mcp.NewTool(newCmdName, mcp.WithDescription(newCmd.Summary))
+			utils.AdminTasksMCPServer.AddTool(mcpToolZypper, func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+				return mcp.NewToolResultText(fmt.Sprintf("%s", utils.ExecuteSystemCall(zypperCmd, allZypperSubCmds_json, newCmd.IsRootRequired, cmdName))), nil
+			})
 		}
 	}
 }
@@ -538,7 +539,7 @@ func addToolsToMCPServer() {
 			return nil, errors.New("Error in addToolsToMCPServer -> utils.AdminTasksMCPServer.AddTool")
 		}
 
-		return mcp.NewToolResultText(fmt.Sprintf("%s", utils.ExecuteSystemCall(zypperCmd, allZypperSubCmds_json,false, zyppercmd, zypperp01, zypperp02))), nil
+		return mcp.NewToolResultText(fmt.Sprintf("%s", utils.ExecuteSystemCall(zypperCmd, allZypperSubCmds_json, false, zyppercmd, zypperp01, zypperp02))), nil
 	})
 
 }
@@ -559,18 +560,18 @@ func INIT(debugMode utils.RunningMode, initMode utils.ToolsInitMode) {
 		zypperDebug = false
 		if initMode == utils.Single {
 			addToolsToMCPServer()
-		} else {
+		} else if initMode == utils.Typed {
 			for key := range allZypperSubCmds {
-				addSingleToolToMCPServer(key, allZypperSubCmds[key] )
+				utils.AddToolToMCPServer(zypperCmd, allZypperSubCmds_json, key, allZypperSubCmds[key])
 			}
 		}
 	case utils.Debug:
 		zypperDebug = true
 		if initMode == utils.Single {
 			addToolsToMCPServer()
-		} else {
+		} else if initMode == utils.Typed {
 			for key := range allZypperSubCmds {
-				addSingleToolToMCPServer(key, allZypperSubCmds[key] )
+				utils.AddToolToMCPServer(zypperCmd, allZypperSubCmds_json, key, allZypperSubCmds[key])
 			}
 		}
 	case utils.Test:
@@ -578,4 +579,3 @@ func INIT(debugMode utils.RunningMode, initMode utils.ToolsInitMode) {
 		runTests()
 	}
 }
-
