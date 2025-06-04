@@ -594,12 +594,22 @@ func runTests() {
 }
 
 func INIT(debugMode utils.RunningMode, initMode utils.ToolsInitMode) {
+	// Convert to JSON
 	allSystemCtlSubCmds_tmp, err := json.MarshalIndent(allSystemCtlSubCmds, "", "  ")
 	if err != nil {
 		fmt.Println("Error converting to JSON:", err)
 		return
 	}
 	allSystemCtlSubCmds_json = string(allSystemCtlSubCmds_tmp)
+	// For reference: how to convert back
+	//     // Convert JSON to map
+	//    var allSystemCtlSubCmds map[string]SingleSubCmd
+	//    err := json.Unmarshal([]byte(jsonData), &allSystemCtlSubCmds)
+	//    if err != nil {
+	//        fmt.Println("Error unmarshalling JSON:", err)
+	//        return
+	//    }
+	//    fmt.Println(allSystemCtlSubCmds)
 	switch debugMode {
 	case utils.Production:
 		systemctlDebug = false

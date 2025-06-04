@@ -5,8 +5,8 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"os/exec"
 	"log/syslog"
+	"os/exec"
 
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
@@ -32,19 +32,19 @@ const (
 )
 
 type SystemCmd struct {
-	Executable        string        `json:"executable"`
-	Description       string        `json:"description"`
-	NeedsRootHandling bool          `json:"needs_root_handling"`
-	Parameters        []string	`json:"parameters"`
+	Executable        string   `json:"executable"`
+	Description       string   `json:"description"`
+	NeedsRootHandling bool     `json:"needs_root_handling"`
+	Parameters        []string `json:"parameters"`
 }
 
 type SingleSubCmd struct {
-	CmdGroup       string         `json:"cmd_group"`
-	Summary        string         `json:"summary"`
-	Description    string         `json:"description"`
-	IsEnabled      bool           `json:"is_enabled"`
-	IsRootRequired bool           `json:"is_root_required"`
-	Parameters     []string	      `json:"parameters"`
+	CmdGroup       string   `json:"cmd_group"`
+	Summary        string   `json:"summary"`
+	Description    string   `json:"description"`
+	IsEnabled      bool     `json:"is_enabled"`
+	IsRootRequired bool     `json:"is_root_required"`
+	Parameters     []string `json:"parameters"`
 }
 
 func startMCPServer() {
@@ -59,15 +59,15 @@ func ExecuteSystemCall(systemCmd SystemCmd, fullHelpText string, isRootRequired 
 	sysLog, syslogerr := syslog.New(syslog.LOG_INFO, "ExecuteSystemCall")
 	defer sysLog.Close()
 	if syslogerr != nil {
-		return("Failed to connect to syslog: %v")
+		return ("Failed to connect to syslog: %v")
 	}
 	if subcmd == "help" {
-		if utilsDebug {		
+		if utilsDebug {
 			sysLog.Info(string(fullHelpText))
 		}
 		return (string(fullHelpText))
 	} else {
-		if utilsDebug {		
+		if utilsDebug {
 			sysLog.Info(systemCmd.Executable)
 			sysLog.Info(subcmd)
 		}
@@ -96,7 +96,7 @@ func ExecuteSystemCall(systemCmd SystemCmd, fullHelpText string, isRootRequired 
 		var resultstring string
 		cmd.Stdout = &out
 		err := cmd.Run()
-		if utilsDebug {		
+		if utilsDebug {
 			sysLog.Info(cmd.String())
 		}
 		if err != nil {
@@ -128,7 +128,7 @@ func AddToolToMCPServer(systemCmd SystemCmd, fullHelpText string, cmdName string
 		if utilsDebug {
 			sysLog.Info(newCmdName)
 		}
-		
+
 		var summaryWithParameters string = newCmd.Summary + ". Parameters: "
 		for _, arg := range newCmd.Parameters {
 			summaryWithParameters = summaryWithParameters + fmt.Sprint(arg)
@@ -148,7 +148,7 @@ func AddToolToMCPServer(systemCmd SystemCmd, fullHelpText string, cmdName string
 					strList = append(strList, fmt.Sprint(arg.(string)))
 				}
 			}
-			return mcp.NewToolResultText(fmt.Sprintf("%s", ExecuteSystemCall(systemCmd, fullHelpText, newCmd.IsRootRequired, cmdName, strList... ))), nil
+			return mcp.NewToolResultText(fmt.Sprintf("%s", ExecuteSystemCall(systemCmd, fullHelpText, newCmd.IsRootRequired, cmdName, strList...))), nil
 		})
 
 	}

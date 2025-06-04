@@ -20,7 +20,7 @@ var zypperCmd utils.SystemCmd = utils.SystemCmd{
 	Executable:        "zypper",
 	Description:       "Command-line interface to ZYpp system management library (libzypp)",
 	NeedsRootHandling: true,
-	Parameters: 	   []string{"--xmlout", "--terse", "--non-interactive"},
+	Parameters:        []string{"--xmlout", "--terse", "--non-interactive"},
 }
 
 var allZypperSubCmds_json string
