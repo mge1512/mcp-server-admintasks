@@ -6,7 +6,10 @@ import (
 	"fmt"
 	"log"
 	"log/syslog"
+	"os"
 	"os/exec"
+	"strings"
+	"encoding/json"
 
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
@@ -48,19 +51,36 @@ type SystemCmd struct {
 	SubCommands       map[string]SingleSubCmd `json:"subcommands"`
 }
 
-/*
+func readSystemCmdJSONIntoStruct(directoryPath string) SystemCmd {
+	// Get list of files
+	var newSystemCmd SystemCmd
+	files, err := os.ReadDir(directoryPath)
+	if err != nil {
+		return newSystemCmd
+	}
+	// Loop through each file
+	for _, file := range files {
+		if file.IsDir() || !strings.HasSuffix(file.Name(), ".json") {
+			continue // Skip directories and files not ".json"
+		}
+		filePath := directoryPath + "/" + file.Name()
 
-   // Convert JSON to struct
-   var systemCmd SystemCmd
-   err := json.Unmarshal([]byte(jsonData), &systemCmd)
-   if err != nil {
-       fmt.Println("Error unmarshalling JSON:", err)
-       return
-   }
-
-   fmt.Println(systemCmd)
-
-*/
+		// Open JSON file
+		file, err := os.Open(filePath)
+		if err != nil {
+			// fmt.Println("Error opening file:", err)
+			return newSystemCmd
+		}
+		defer file.Close()
+		// Decode JSON into struct
+		err = json.NewDecoder(file).Decode(&newSystemCmd)
+		if err != nil {
+			// fmt.Println("Error decoding JSON:", err)
+			return newSystemCmd
+		}
+	}
+	return newSystemCmd
+}
 
 func startMCPServer() {
 	AdminTasksMCPServer = server.NewMCPServer(
