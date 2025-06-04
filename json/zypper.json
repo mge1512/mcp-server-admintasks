@@ -1,0 +1,439 @@
+{
+  "executable": "zypper",
+  "description": "Command-line interface to ZYpp system management library (libzypp)",
+  "needs_root_handling": true,
+  "default_parameters": [
+    "--xmlout",
+    "--terse",
+    "--non-interactive"
+  ],
+  "subcommands": {
+    "addlocale": {
+      "cmd_group": "LocaleManagement Commands",
+      "summary": "Add locale(s) to requested locales.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "addlock": {
+      "cmd_group": "PackageLocks Commands",
+      "summary": "Add a package lock.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "addrepo": {
+      "cmd_group": "RepositoryManagement Commands",
+      "summary": "Add a new repository.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "addservice": {
+      "cmd_group": "ServiceManagement Commands",
+      "summary": "Add a new service.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "clean": {
+      "cmd_group": "RepositoryManagement Commands",
+      "summary": "Clean local caches.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "cleanlocks": {
+      "cmd_group": "PackageLocks Commands",
+      "summary": "Remove useless locks.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "dist-upgrade": {
+      "cmd_group": "UpdateManagement Commands",
+      "summary": "Perform a distribution upgrade.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "download": {
+      "cmd_group": "Other Commands",
+      "summary": "Download rpms specified on the commandline to a local directory.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "help": {
+      "cmd_group": "General Commands",
+      "summary": "Print zypper help",
+      "description": "",
+      "is_enabled": true,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "info": {
+      "cmd_group": "Querying Commands",
+      "summary": "Show full information for specified packages.",
+      "description": "Ask for full/detailed information about a single package with a known name (version, size, status, description, installation status).--  Do not use, if the name is not fully clear (use zypper search for that). ",
+      "is_enabled": true,
+      "is_root_required": false,
+      "parameters": [
+        "PACKAGE name"
+      ]
+    },
+    "install": {
+      "cmd_group": "SoftwareManagement Commands",
+      "summary": "Install packages.",
+      "description": "If installation fails adding the INSTALLOPTION '--no-confirm' might help",
+      "is_enabled": true,
+      "is_root_required": true,
+      "parameters": [
+        "PATTERN or PACKAGE name",
+        "INSTALLOPTION"
+      ]
+    },
+    "install-new-recommends": {
+      "cmd_group": "SoftwareManagement Commands",
+      "summary": "Install newly added packages recommended by installed packages.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "licenses": {
+      "cmd_group": "Other Commands",
+      "summary": "Print report about licenses and EULAs of installed packages.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "list-patches": {
+      "cmd_group": "UpdateManagement Commands",
+      "summary": "List available patches.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "list-updates": {
+      "cmd_group": "UpdateManagement Commands",
+      "summary": "List available updates.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "locales": {
+      "cmd_group": "LocaleManagement Commands",
+      "summary": "List requested locales (languages codes).",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "locks": {
+      "cmd_group": "PackageLocks Commands",
+      "summary": "List current package locks.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "modifyrepo": {
+      "cmd_group": "RepositoryManagement Commands",
+      "summary": "Modify specified repository.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "modifyservice": {
+      "cmd_group": "ServiceManagement Commands",
+      "summary": "Modify specified service.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "needs-rebooting": {
+      "cmd_group": "Other Commands",
+      "summary": "Check if the reboot-needed flag was set.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "packages": {
+      "cmd_group": "Querying Commands",
+      "summary": "List all available packages.",
+      "description": "If the package name is known, better use zypper search ",
+      "is_enabled": true,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "patch": {
+      "cmd_group": "UpdateManagement Commands",
+      "summary": "Install needed patches.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "patch-check": {
+      "cmd_group": "UpdateManagement Commands",
+      "summary": "Check for patches.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "patch-info": {
+      "cmd_group": "Querying Commands",
+      "summary": "Show full information for specified patches.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "patches": {
+      "cmd_group": "Querying Commands",
+      "summary": "List all available patches.",
+      "description": "",
+      "is_enabled": true,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "pattern-info": {
+      "cmd_group": "Querying Commands",
+      "summary": "Show full information for specified patterns.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "patterns": {
+      "cmd_group": "Querying Commands",
+      "summary": "List all available patterns.",
+      "description": "",
+      "is_enabled": true,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "product-info": {
+      "cmd_group": "Querying Commands",
+      "summary": "Show full information for specified products.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "products": {
+      "cmd_group": "Querying Commands",
+      "summary": "List all available products.",
+      "description": "",
+      "is_enabled": true,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "ps": {
+      "cmd_group": "Other Commands",
+      "summary": "List running processes which might still use files and libraries deleted",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "purge-kernels": {
+      "cmd_group": "Other Commands",
+      "summary": "Remove old kernels.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "refresh": {
+      "cmd_group": "RepositoryManagement Commands",
+      "summary": "Refresh all repositories.",
+      "description": "",
+      "is_enabled": true,
+      "is_root_required": true,
+      "parameters": []
+    },
+    "refresh-services": {
+      "cmd_group": "ServiceManagement Commands",
+      "summary": "Refresh all services.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "remove": {
+      "cmd_group": "SoftwareManagement Commands",
+      "summary": "Remove packages.",
+      "description": "If installation fails adding the INSTALLOPTION '--no-confirm' might help",
+      "is_enabled": true,
+      "is_root_required": true,
+      "parameters": [
+        "PATTERN or PACKAGE name",
+        "REMOVEOPTION"
+      ]
+    },
+    "removelocale": {
+      "cmd_group": "LocaleManagement Commands",
+      "summary": "Remove locale(s) from requested locales.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "removelock": {
+      "cmd_group": "PackageLocks Commands",
+      "summary": "Remove a package lock.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "removeptf": {
+      "cmd_group": "SoftwareManagement Commands",
+      "summary": "Remove (not only) PTFs.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "removerepo": {
+      "cmd_group": "RepositoryManagement Commands",
+      "summary": "Remove specified repository.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "removeservice": {
+      "cmd_group": "ServiceManagement Commands",
+      "summary": "Remove specified service.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "renamerepo": {
+      "cmd_group": "RepositoryManagement Commands",
+      "summary": "Rename specified repository.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "repos": {
+      "cmd_group": "RepositoryManagement Commands",
+      "summary": "List all defined repositories.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "search": {
+      "cmd_group": "Querying Commands",
+      "summary": "DEFAULT action of zypper. Search for packages matching a PATTERN.",
+      "description": "PATTERN can be a regular expression. Recommended when searching for unknown packages or patterns or when the name of a package might be vague/unclear. For a more extensive search try to add the SEARCHOPTION '--search-description'.",
+      "is_enabled": true,
+      "is_root_required": false,
+      "parameters": [
+        "PATTERN or PACKAGE name",
+        "SEARCHOPTION"
+      ]
+    },
+    "services": {
+      "cmd_group": "ServiceManagement Commands",
+      "summary": "List all defined services.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "source-download": {
+      "cmd_group": "Other Commands",
+      "summary": "Download source rpms for all installed packages to a local directory.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "source-install": {
+      "cmd_group": "SoftwareManagement Commands",
+      "summary": "Install source packages and their build dependencies.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "subcommand": {
+      "cmd_group": "Subcommands Commands",
+      "summary": "Lists available subcommands.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "system-architecture": {
+      "cmd_group": "Other Commands",
+      "summary": "Print the detected system architecture.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "targetos": {
+      "cmd_group": "Other Commands",
+      "summary": "Print the target operating system ID string.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "update": {
+      "cmd_group": "UpdateManagement Commands",
+      "summary": "Update installed packages with newer versions.",
+      "description": "",
+      "is_enabled": true,
+      "is_root_required": true,
+      "parameters": []
+    },
+    "verify": {
+      "cmd_group": "SoftwareManagement Commands",
+      "summary": "Verify integrity of package dependencies.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "versioncmp": {
+      "cmd_group": "Other Commands",
+      "summary": "Compare two version strings.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    },
+    "what-provides": {
+      "cmd_group": "Querying Commands",
+      "summary": "List packages providing specified capability.",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": []
+    }
+  }
+}

@@ -1,0 +1,711 @@
+{
+  "executable": "systemctl",
+  "description": "Query or send control commands to the system manager",
+  "needs_root_handling": false,
+  "default_parameters": [
+    "--output=json-pretty",
+    "--full",
+    "--no-pager"
+  ],
+  "subcommands": {
+    "add-requires": {
+      "cmd_group": "UnitFile Commands",
+      "summary": "Add 'Requires' dependency for the target on specified one or more units",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": [
+        "TARGET",
+        "UNIT name"
+      ]
+    },
+    "add-wants": {
+      "cmd_group": "UnitFile Commands",
+      "summary": "Add 'Wants' dependency for the target on specified one or more units",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": [
+        "TARGET",
+        "UNIT name"
+      ]
+    },
+    "bind": {
+      "cmd_group": "Unit Commands",
+      "summary": "Bind-mount a path from the host into a unit's namespace",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT name",
+        "PATH"
+      ]
+    },
+    "cancel": {
+      "cmd_group": "Job Commands",
+      "summary": "cancel [JOB...]                     Cancel all, one, or more jobs",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": null
+    },
+    "cat": {
+      "cmd_group": "Unit Commands",
+      "summary": "Show files and drop-ins of specified units",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT name or PATTERN / regular expression"
+      ]
+    },
+    "clean": {
+      "cmd_group": "Unit Commands",
+      "summary": "Clean runtime, cache, state, logs or configuration of unit",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT name"
+      ]
+    },
+    "daemon-reexec": {
+      "cmd_group": "ManagerState Commands",
+      "summary": "daemon-reexec                       Reexecute systemd manager",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": null
+    },
+    "daemon-reload": {
+      "cmd_group": "ManagerState Commands",
+      "summary": "daemon-reload                       Reload systemd manager configuration",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": null
+    },
+    "default": {
+      "cmd_group": "System Commands",
+      "summary": "default                             Enter system default mode",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": null
+    },
+    "disable": {
+      "cmd_group": "UnitFile Commands",
+      "summary": "Disable one or more unit files",
+      "description": "",
+      "is_enabled": true,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT or PATH: what to disable"
+      ]
+    },
+    "edit": {
+      "cmd_group": "UnitFile Commands",
+      "summary": "Edit one or more unit files",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT name"
+      ]
+    },
+    "emergency": {
+      "cmd_group": "System Commands",
+      "summary": "emergency                           Enter system emergency mode",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": null
+    },
+    "enable": {
+      "cmd_group": "UnitFile Commands",
+      "summary": "Enable one or more unit files",
+      "description": "",
+      "is_enabled": true,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT or PATH: what to enable"
+      ]
+    },
+    "exit": {
+      "cmd_group": "System Commands",
+      "summary": "exit [EXIT_CODE]                    Request user instance or container exit",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": null
+    },
+    "freeze": {
+      "cmd_group": "Unit Commands",
+      "summary": "Freeze execution of unit processes",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT name or PATTERN / regular expression"
+      ]
+    },
+    "get-default": {
+      "cmd_group": "UnitFile Commands",
+      "summary": "Get the name of the default target",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": null
+    },
+    "halt": {
+      "cmd_group": "System Commands",
+      "summary": "halt                                Shut down and halt the system",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": null
+    },
+    "help": {
+      "cmd_group": "Unit Commands",
+      "summary": "Show manual for one or more units. This includes extended information about the respective unit/service, which most often cannot be directly accessed by systemctl, but can be useful for either a human administrator or another MCP server to deal with.",
+      "description": "",
+      "is_enabled": true,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT name or PATTERN / regular expression or PID / ProcessID"
+      ]
+    },
+    "hibernate": {
+      "cmd_group": "System Commands",
+      "summary": "Hibernate the system",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": null
+    },
+    "hybrid-sleep": {
+      "cmd_group": "System Commands",
+      "summary": "Hibernate and suspend the system",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": null
+    },
+    "import-environment": {
+      "cmd_group": "Environment Commands",
+      "summary": "import-environment VARIABLE...      Import all or some environment variables",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": null
+    },
+    "is-enabled": {
+      "cmd_group": "UnitFile Commands",
+      "summary": "Check whether unit files are enabled",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT to check whether it is enabled"
+      ]
+    },
+    "is-failed": {
+      "cmd_group": "Unit Commands",
+      "summary": "Check whether units are failed or system is in degraded state",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT name or PATTERN / regular expression"
+      ]
+    },
+    "is-readonlycmd": {
+      "cmd_group": "Unit Commands",
+      "summary": "Check whether units are readonlycmd",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT name or PATTERN / regular expression"
+      ]
+    },
+    "is-system-running": {
+      "cmd_group": "System Commands",
+      "summary": "is-system-running                   Check whether system is fully running",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": null
+    },
+    "isolate": {
+      "cmd_group": "Unit Commands",
+      "summary": "Start one unit and stop all others",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT name"
+      ]
+    },
+    "kexec": {
+      "cmd_group": "System Commands",
+      "summary": "kexec                               Shut down and reboot the system with kexec",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": null
+    },
+    "kill": {
+      "cmd_group": "Unit Commands",
+      "summary": "Send signal to processes of a unit",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT name"
+      ]
+    },
+    "link": {
+      "cmd_group": "UnitFile Commands",
+      "summary": "Link one or more units files into the search path",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": [
+        "PATH"
+      ]
+    },
+    "list-automounts": {
+      "cmd_group": "Unit Commands",
+      "summary": "List automount units currently in memory, ordered by path. Use PATTERN='--all' to see also those which are installed, but not enabled.",
+      "description": "",
+      "is_enabled": true,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT name or PATTERN / regular expression"
+      ]
+    },
+    "list-dependencies": {
+      "cmd_group": "Unit Commands",
+      "summary": "Recursively show units which are required or wanted by the units or by which those units are required or wanted",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT name"
+      ]
+    },
+    "list-jobs": {
+      "cmd_group": "Job Commands",
+      "summary": "list-jobs [PATTERN...]              List jobs",
+      "description": "",
+      "is_enabled": true,
+      "is_root_required": false,
+      "parameters": [
+        "PATTERN / regular expression"
+      ]
+    },
+    "list-machines": {
+      "cmd_group": "Machine Commands",
+      "summary": "list-machines [PATTERN...]          List local containers and host",
+      "description": "",
+      "is_enabled": true,
+      "is_root_required": false,
+      "parameters": [
+        "PATTERN / regular expression"
+      ]
+    },
+    "list-paths": {
+      "cmd_group": "Unit Commands",
+      "summary": "List path units currently in memory, ordered by path. Use PATTERN='--all' to see also those which are installed, but not enabled.",
+      "description": "",
+      "is_enabled": true,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT name or PATTERN / regular expression"
+      ]
+    },
+    "list-sockets": {
+      "cmd_group": "Unit Commands",
+      "summary": "List socket units currently in memory, ordered by address. Use PATTERN='--all' to see also those which are installed, but not enabled.",
+      "description": "",
+      "is_enabled": true,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT name or PATTERN / regular expression"
+      ]
+    },
+    "list-timers": {
+      "cmd_group": "Unit Commands",
+      "summary": "List timer units currently in memory, ordered by next elapse. Use PATTERN='--all' to see also those which are installed, but not enabled.",
+      "description": "",
+      "is_enabled": true,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT name or PATTERN / regular expression"
+      ]
+    },
+    "list-unit-files": {
+      "cmd_group": "UnitFile Commands",
+      "summary": "list-unit-files [PATTERN...]        List installed unit files",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": [
+        "PATTERN / regular expression"
+      ]
+    },
+    "list-units": {
+      "cmd_group": "Unit Commands",
+      "summary": "List units currently in memory. DEFAULT action of systemctl, recommended to use with OPTION='--all'.",
+      "description": "List units currently in memory. DEFAULT action of systemctl. Use OPTION='--all' to see also those units which are installed, but not enabled. This is the default of systemctl and should be called first to get an overview.",
+      "is_enabled": true,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT name or PATTERN / regular expression"
+      ]
+    },
+    "log-level": {
+      "cmd_group": "ManagerState Commands",
+      "summary": "log-level [LEVEL]                   Get/set logging threshold for manager",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": null
+    },
+    "log-target": {
+      "cmd_group": "ManagerState Commands",
+      "summary": "log-target [TARGET]                 Get/set logging target for manager",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": null
+    },
+    "mask": {
+      "cmd_group": "UnitFile Commands",
+      "summary": "Mask one or more units",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT name"
+      ]
+    },
+    "mount-image": {
+      "cmd_group": "Unit Commands",
+      "summary": "Mount an image from the host into a unit's namespace",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT name",
+        "PATH",
+        "OPTIONS"
+      ]
+    },
+    "poweroff": {
+      "cmd_group": "System Commands",
+      "summary": "poweroff                            Shut down and power-off the system",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": null
+    },
+    "preset": {
+      "cmd_group": "UnitFile Commands",
+      "summary": "Enable/disable one or more unit files based on preset configuration",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": null
+    },
+    "preset-all": {
+      "cmd_group": "UnitFile Commands",
+      "summary": "Enable/disable all unit files based on preset configuration",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": null
+    },
+    "reboot": {
+      "cmd_group": "System Commands",
+      "summary": "reboot                              Shut down and reboot the system",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": null
+    },
+    "reenable": {
+      "cmd_group": "UnitFile Commands",
+      "summary": "Reenable one or more unit files",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": null
+    },
+    "reload": {
+      "cmd_group": "Unit Commands",
+      "summary": "Reload one or more units",
+      "description": "",
+      "is_enabled": true,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT name"
+      ]
+    },
+    "reload-or-restart": {
+      "cmd_group": "Unit Commands",
+      "summary": "Reload one or more units if possible, otherwise start or restart",
+      "description": "",
+      "is_enabled": true,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT name"
+      ]
+    },
+    "rescue": {
+      "cmd_group": "System Commands",
+      "summary": "rescue                              Enter system rescue mode",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": null
+    },
+    "reset-failed": {
+      "cmd_group": "Unit Commands",
+      "summary": "Reset failed state for all, one, or more units",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT name or PATTERN / regular expression"
+      ]
+    },
+    "restart": {
+      "cmd_group": "Unit Commands",
+      "summary": "Start or restart one or more units",
+      "description": "",
+      "is_enabled": true,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT name"
+      ]
+    },
+    "revert": {
+      "cmd_group": "UnitFile Commands",
+      "summary": "Revert one or more unit files to vendor version",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT name"
+      ]
+    },
+    "service-log-level": {
+      "cmd_group": "Unit Commands",
+      "summary": "Get/set logging threshold for service.",
+      "description": "Get/set logging threshold for service. If the optional argument LEVEL is provided, then change the current log level of the service to LEVEL. The log level should be a typical syslog log level, i.e. a value in the range 0...7 or one of the strings emerg, alert, crit, err, warning, notice, info, debug; see syslog(3) for details.",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": [
+        "SERVICE name",
+        "LEVEL"
+      ]
+    },
+    "service-log-target": {
+      "cmd_group": "Unit Commands",
+      "summary": "Get/set logging target for service",
+      "description": "If the optional argument TARGET is provided, then change the current log target of the service to TARGET. The log target should be one of the strings console (for log output to the service's standard error stream), kmsg (for log output to the kernel log buffer), journal (for log output to systemd-journald.service(8) using the native journal protocol), syslog (for log output to the classic syslog socket /dev/log), null (for no log output whatsoever) or auto (for an automatically determined choice, typically equivalent to console if the service is invoked interactively, and journal or syslog otherwise).",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": [
+        "SERVICE name",
+        "TARGET"
+      ]
+    },
+    "service-watchdogs": {
+      "cmd_group": "ManagerState Commands",
+      "summary": "service-watchdogs [BOOL]            Get/set service watchdog state",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": null
+    },
+    "set-default": {
+      "cmd_group": "UnitFile Commands",
+      "summary": "Set the default target",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": [
+        "TARGET name"
+      ]
+    },
+    "set-environment": {
+      "cmd_group": "Environment Commands",
+      "summary": "set-environment VARIABLE=VALUE...   Set one or more environment variables",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": null
+    },
+    "set-property": {
+      "cmd_group": "Unit Commands",
+      "summary": "set-property UNIT PROPERTY=VALUE... Sets one or more properties of a unit",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT name",
+        "PROPERTY name",
+        "VALUE"
+      ]
+    },
+    "show": {
+      "cmd_group": "Unit Commands",
+      "summary": "Show properties of one or more units/jobs or the manager",
+      "description": "",
+      "is_enabled": true,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT name or PATTERN / regular expression or jobID"
+      ]
+    },
+    "show-environment": {
+      "cmd_group": "Environment Commands",
+      "summary": "show-environment                    Dump environment",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": null
+    },
+    "sleep": {
+      "cmd_group": "System Commands",
+      "summary": "Put the system to sleep (through one of the operations below)",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": null
+    },
+    "soft-reboot": {
+      "cmd_group": "System Commands",
+      "summary": "soft-reboot                         Shut down and reboot userspace",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": null
+    },
+    "start": {
+      "cmd_group": "Unit Commands",
+      "summary": "Start (activate) one or more units",
+      "description": "",
+      "is_enabled": true,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT name"
+      ]
+    },
+    "status": {
+      "cmd_group": "Unit Commands",
+      "summary": "Show runtime status of one or more units",
+      "description": "",
+      "is_enabled": true,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT name or PATTERN / regular expression or PID / ProcessID"
+      ]
+    },
+    "stop": {
+      "cmd_group": "Unit Commands",
+      "summary": "Stop (deactivate) one or more units",
+      "description": "",
+      "is_enabled": true,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT name"
+      ]
+    },
+    "suspend": {
+      "cmd_group": "System Commands",
+      "summary": "Suspend the system",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": null
+    },
+    "suspend-then-hibernate": {
+      "cmd_group": "System Commands",
+      "summary": "Suspend the system, wake after a period of time, and hibernate",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": null
+    },
+    "switch-root": {
+      "cmd_group": "System Commands",
+      "summary": "switch-root [ROOT [INIT]]           Change to a different root file system",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": null
+    },
+    "thaw": {
+      "cmd_group": "Unit Commands",
+      "summary": "Resume execution of a frozen unit",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT name or PATTERN / regular expression"
+      ]
+    },
+    "try-reload-or-restart": {
+      "cmd_group": "Unit Commands",
+      "summary": "If readonlycmd, reload one or more units, if supported, otherwise restart",
+      "description": "",
+      "is_enabled": true,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT name"
+      ]
+    },
+    "try-restart": {
+      "cmd_group": "Unit Commands",
+      "summary": "Restart one or more units if readonlycmd",
+      "description": "",
+      "is_enabled": true,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT name"
+      ]
+    },
+    "unmask": {
+      "cmd_group": "UnitFile Commands",
+      "summary": "Unmask one or more units",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": [
+        "UNIT name"
+      ]
+    },
+    "unset-environment": {
+      "cmd_group": "Environment Commands",
+      "summary": "unset-environment VARIABLE...       Unset one or more environment variables",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": null
+    },
+    "whoami": {
+      "cmd_group": "Unit Commands",
+      "summary": "Return unit caller or specified PIDs are part of",
+      "description": "",
+      "is_enabled": false,
+      "is_root_required": false,
+      "parameters": [
+        "PID"
+      ]
+    }
+  }
+}
