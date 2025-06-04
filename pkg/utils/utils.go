@@ -3,13 +3,13 @@ package utils
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"log/syslog"
 	"os"
 	"os/exec"
-	"strings"
-	"encoding/json"
+	"path/filepath"
 
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
@@ -51,35 +51,38 @@ type SystemCmd struct {
 	SubCommands       map[string]SingleSubCmd `json:"subcommands"`
 }
 
-func readSystemCmdJSONIntoStruct(directoryPath string) SystemCmd {
+func readSystemCmdJSONIntoStruct(directoryPath string) (map[string]SystemCmd, error) {
 	// Get list of files
-	var newSystemCmd SystemCmd
+	allSystemCmds := make(map[string]SystemCmd)
 	files, err := os.ReadDir(directoryPath)
 	if err != nil {
-		return newSystemCmd
+		return nil, fmt.Errorf("failed to read directory: %v", err)
 	}
 	// Loop through each file
 	for _, file := range files {
-		if file.IsDir() || !strings.HasSuffix(file.Name(), ".json") {
-			continue // Skip directories and files not ".json"
+		if file.IsDir() || filepath.Ext(file.Name()) != ".json" {
+			continue // Skip directories and non-JSON files
 		}
-		filePath := directoryPath + "/" + file.Name()
+		filePath := filepath.Join(directoryPath, file.Name())
 
 		// Open JSON file
 		file, err := os.Open(filePath)
 		if err != nil {
-			// fmt.Println("Error opening file:", err)
-			return newSystemCmd
+			// fmt.Println("Error opening file:", filePath, err)
+			continue
 		}
 		defer file.Close()
 		// Decode JSON into struct
+		var newSystemCmd SystemCmd
 		err = json.NewDecoder(file).Decode(&newSystemCmd)
 		if err != nil {
 			// fmt.Println("Error decoding JSON:", err)
-			return newSystemCmd
+			continue
 		}
+		// Store the parsed struct in the map using Executable as key
+		allSystemCmds[newSystemCmd.Executable] = newSystemCmd
 	}
-	return newSystemCmd
+	return allSystemCmds, nil
 }
 
 func startMCPServer() {
@@ -191,6 +194,8 @@ func AddToolToMCPServer(systemCmd SystemCmd, fullHelpText string, cmdName string
 }
 
 func RUN() {
+	// readSystemCmdJSONIntoStruct("/usr/share/mcp-server-admintasks/")
+	readSystemCmdJSONIntoStruct("/tmp/json/")
 	if err := server.ServeStdio(AdminTasksMCPServer); err != nil {
 		fmt.Printf("Server error: %v\n")
 	}
