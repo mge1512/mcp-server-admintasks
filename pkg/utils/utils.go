@@ -31,13 +31,6 @@ const (
 	Typed
 )
 
-type SystemCmd struct {
-	Executable        string   `json:"executable"`
-	Description       string   `json:"description"`
-	NeedsRootHandling bool     `json:"needs_root_handling"`
-	Parameters        []string `json:"parameters"`
-}
-
 type SingleSubCmd struct {
 	CmdGroup       string   `json:"cmd_group"`
 	Summary        string   `json:"summary"`
@@ -46,6 +39,37 @@ type SingleSubCmd struct {
 	IsRootRequired bool     `json:"is_root_required"`
 	Parameters     []string `json:"parameters"`
 }
+
+type SystemCmd struct {
+	Executable        string                  `json:"executable"`
+	Description       string                  `json:"description"`
+	NeedsRootHandling bool                    `json:"needs_root_handling"`
+	DefaultParameters []string                `json:"default_parameters"`
+	SubCommands       map[string]SingleSubCmd `json:"subcommands"`
+}
+
+/*
+    // Convert struct to JSON
+   jsonData, err := json.MarshalIndent(systemCmd, "", "  ")
+    if err != nil {
+        fmt.Println("Error marshalling JSON:", err)
+        return
+    }
+
+    fmt.Println(string(jsonData))
+
+
+    // Convert JSON to struct
+    var systemCmd SystemCmd
+    err := json.Unmarshal([]byte(jsonData), &systemCmd)
+    if err != nil {
+        fmt.Println("Error unmarshalling JSON:", err)
+        return
+    }
+
+    fmt.Println(systemCmd)
+
+*/
 
 func startMCPServer() {
 	AdminTasksMCPServer = server.NewMCPServer(
@@ -74,7 +98,7 @@ func ExecuteSystemCall(systemCmd SystemCmd, fullHelpText string, isRootRequired 
 		// This will be the cmdline parameters after the main executable
 		var strArgs []string
 		// First add the default options
-		for _, param := range systemCmd.Parameters {
+		for _, param := range systemCmd.DefaultParameters {
 			strArgs = append(strArgs, param)
 		}
 		// Second add the subcommand
