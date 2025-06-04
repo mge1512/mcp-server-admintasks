@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"mcp-server-admintasks/pkg/utils"
+	"os"
 )
 
 var systemctlDebug bool
@@ -590,7 +591,17 @@ var systemCtlCmd utils.SystemCmd = utils.SystemCmd{
 }
 
 func runTests() {
-
+	// Convert struct to JSON
+	jsonData, err := json.MarshalIndent(systemCtlCmd, "", "  ")
+	if err != nil {
+		fmt.Println("Error marshalling JSON:", err)
+		return
+	}
+	// Write JSON to file
+	err = os.WriteFile("systemctl.json", jsonData, 0644)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func INIT(debugMode utils.RunningMode, initMode utils.ToolsInitMode) {

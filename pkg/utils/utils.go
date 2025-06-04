@@ -49,25 +49,16 @@ type SystemCmd struct {
 }
 
 /*
-    // Convert struct to JSON
-   jsonData, err := json.MarshalIndent(systemCmd, "", "  ")
-    if err != nil {
-        fmt.Println("Error marshalling JSON:", err)
-        return
-    }
 
-    fmt.Println(string(jsonData))
+   // Convert JSON to struct
+   var systemCmd SystemCmd
+   err := json.Unmarshal([]byte(jsonData), &systemCmd)
+   if err != nil {
+       fmt.Println("Error unmarshalling JSON:", err)
+       return
+   }
 
-
-    // Convert JSON to struct
-    var systemCmd SystemCmd
-    err := json.Unmarshal([]byte(jsonData), &systemCmd)
-    if err != nil {
-        fmt.Println("Error unmarshalling JSON:", err)
-        return
-    }
-
-    fmt.Println(systemCmd)
+   fmt.Println(systemCmd)
 
 */
 

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"log/syslog"
+	"os"
 	"strconv"
 
 	"mcp-server-admintasks/pkg/utils"
@@ -545,7 +546,18 @@ func addToolsToMCPServer() {
 }
 
 func runTests() {
-	addToolsToMCPServer()
+	// addToolsToMCPServer()
+	// Convert struct to JSON
+	jsonData, err := json.MarshalIndent(zypperCmd, "", "  ")
+	if err != nil {
+		fmt.Println("Error marshalling JSON:", err)
+		return
+	}
+	// Write JSON to file
+	err = os.WriteFile("zypper.json", jsonData, 0644)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func INIT(debugMode utils.RunningMode, initMode utils.ToolsInitMode) {
